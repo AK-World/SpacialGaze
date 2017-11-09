@@ -120,8 +120,8 @@ exports.commands = {
 		if (!target) target = user.name;
 		if (!this.runBroadcast()) return;
 		let userid = toId(target);
-		if (userid.length < 1) return this.sendReply("/wallet - Please specify a user.");
-		if (userid.length > 19) return this.sendReply("/wallet - [user] can't be longer than 19 characters.");
+		if (userid.length < 1) return this.sendReply("/ap - Please specify a user.");
+		if (userid.length > 19) return this.sendReply("/ap - [user] can't be longer than 19 characters.");
 
 		Economy.readMoney(userid, money => {
 			this.sendReplyBox(SG.nameColor(target, true) + " has " + money + ((money === 1) ? " " + currencyName + "." : " " + currencyPlural + "."));
@@ -278,7 +278,7 @@ exports.commands = {
 		});
 		if (!keys.length) return this.sendReplyBox("AP ladder is empty.");
 		keys.sort(function (a, b) { return b.money - a.money; });
-		this.sendReplyBox(rankLadder('Active Users', currencyPlural, keys.slice(0, target), 'money') + '</div>');
+		this.sendReplyBox(rankLadder('Most Activity Points', currencyPlural, keys.slice(0, target), 'money') + '</div>');
 	},
 
 	resetap: function (target, room, user) {
