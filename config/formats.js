@@ -355,7 +355,7 @@ exports.Formats = [
 	///////////////////////////////////////////////////////
 	// SpacialGaze Metagames
 	{
-		section: 'Spacialgaze Metagames',
+		section: 'Impulse Metagames',
 		column: 2,
 	},
 	{
