@@ -60,46 +60,46 @@ function addExp(user, room, amount) {
 			if (oldLevel < level) {
 				let reward = '';
 				switch (level) {
-				case 5:
+				case 1:
 					Economy.logTransaction(user.userid + ' received a custom symbol for reaching level ' + level + '.');
 					user.canCustomSymbol = true;
 					reward = 'a Custom Symbol. To claim your custom symbol, use the command /customsymbol [symbol]';
 					break;
-				case 10:
+				case 3:
 					Economy.logTransaction(user.userid + ' received a custom avatar for reaching level ' + level + '.');
 					if (!user.tokens) user.tokens = {};
 					user.tokens.avatar = true;
 					reward = 'a Custom Avatar. To claim your avatar, use the command /usetoken avatar, [link to the image you want]';
 					break;
-				case 15:
+				case 5:
 					Economy.logTransaction(user.userid + ' received a custom title for reaching level ' + level + '.');
 					if (!user.tokens) user.tokens = {};
 					user.tokens.title = true;
 					reward = 'a Profile Title. To claim your profile title, use the command /usetoken title, [title], [hex color]';
 					break;
-				case 20:
+				case 7:
 					Economy.logTransaction(user.userid + ' received a custom icon for reaching level ' + level + '.');
 					if (!user.tokens) user.tokens = {};
 					user.tokens.icon = true;
 					reward = 'a Custom Userlist Icon. To claim your icon, use the command /usetoken icon, [link to the image you want]';
 					break;
-				case 25:
+				case 10:
 					Economy.logTransaction(user.userid + ' received a emote for reaching level ' + level + '.');
 					if (!user.tokens) user.tokens = {};
 					user.tokens.emote = true;
 					reward = 'an Emote. To claim your emote, use the command /usetoken emote, [name], [image]';
 					break;
-				case 30:
+				case 12:
 					Economy.logTransaction(user.userid + ' received a custom color for reaching level ' + level + '.');
 					if (!user.tokens) user.tokens = {};
 					user.tokens.color = true;
 					reward = 'a Custom Color. To claim your custom color, use the command /usetoken color, [hex color]';
 					break;
-				case 35:
+				case 15:
 					Economy.writeMoney(user.userid, 50);
 					reward = '50 ' + currencyPlural + '.';
 					break;
-				case 40:
+				case 20:
 					Economy.logTransaction(user.userid + ' received a chatroom for reaching level ' + level + '.');
 					SG.messageSeniorStaff(user.userid + ' has earned a chatroom for reaching level ' + level + '!');
 					Monitor.adminlog(user.userid + ' has earned a chatroom for reaching level ' + level + '!');
@@ -120,7 +120,7 @@ SG.addExp = addExp;
 function level(userid) {
 	userid = toId(userid);
 	let curExp = Db.exp.get(userid, 0);
-	let benchmarks = [0, 40, 90, 165, 250, 400, 600, 810, 1250, 1740, 2450, 3300, 4400, 5550, 6740, 8120, 9630, 11370, 13290, 15520, 18050, 23000, 28000, 33720, 39900, 46440, 52690, 58000, 63600, 69250, 75070, 81170, 87470, 93970, 100810, 107890, 115270, 122960, 131080, 140000];
+	let benchmarks = [0, 40, 90, 150, 220, 350, 500, 700, 950, 1200, 1500, 2000, 2500, 3000, 3500, 4000, 4500, 5000, 6000, 7000, 8000, 9000, 10000, 11000, 12000, 13000, 14000, 15000, 17000, 19000, 21000,23000, 25000, 27000, 29000, 31000, 33000, 35000,40000, 50000];
 	for (let i = 0; i < benchmarks.length; i++) {
 		if (curExp >= benchmarks[i]) {
 			continue;
@@ -134,7 +134,7 @@ SG.level = level;
 
 function nextLevel(user) {
 	let curExp = Db.exp.get(user, 0);
-	let benchmarks = [0, 40, 90, 165, 250, 400, 600, 810, 1250, 1740, 2450, 3300, 4400, 5550, 6740, 8120, 9630, 11370, 13290, 15520, 18050, 23000, 28000, 33720, 39900, 46440, 52690, 58000, 63600, 69250, 75070, 81170, 87470, 93970, 100810, 107890, 115270, 122960, 131080, 140000];
+	let benchmarks = [0, 40, 90, 150, 220, 350, 500, 700, 950, 1200, 1500, 2000, 2500, 3000, 3500, 4000, 4500, 5000, 6000, 7000, 8000, 9000, 10000, 11000, 12000, 13000, 14000, 15000, 17000, 19000, 21000,23000, 25000, 27000, 29000, 31000, 33000, 35000,40000, 50000];
 	for (let i = 0; i < benchmarks.length; i++) {
 		if (curExp >= benchmarks[i]) {
 			continue;
