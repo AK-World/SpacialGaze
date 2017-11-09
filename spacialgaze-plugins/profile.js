@@ -66,6 +66,57 @@ function showBadges(user) {
 	return '';
 }
 
+function getteam(user) {
+	let teamcss = 'float:center;border:none;background:none;';
+
+	let noSprite = '<img src=http://play.pokemonshowdown.com/sprites/bwicons/0.png>';
+	let one = Db.teams.get([user, 'one']);
+	let two = Db.teams.get([user, 'two']);
+	let three = Db.teams.get([user, 'three']);
+	let four = Db.teams.get([user, 'four']);
+	let five = Db.teams.get([user, 'five']);
+	let six = Db.teams.get([user, 'six']);
+	if (!Db.teams.has(user)) return '<div style="' + teamcss + '" >' + noSprite + noSprite + noSprite + noSprite + noSprite + noSprite + '</div>';
+
+	function iconize(link) {
+		return '<button id="kek" name="send" value="/dt ' + link + '" style="background:transparent;border:none;"><img src="http://www.serebii.net/pokedex-sm/icon/' + link + '.png"></button>';
+	}
+	//return '<div style="' + teamcss + '">' + '<br>' + iconize(one) + iconize(two) + iconize(three) + '<br>' + iconize(four) + iconize(five) + iconize(six) + '</div>';*/
+	let teamDisplay = '<center><div style="' + teamcss + '">';
+	if (Db.teams.has([user, 'one'])) {
+		teamDisplay += iconize(one);
+	} else {
+		teamDisplay += noSprite;
+	}
+	if (Db.teams.has([user, 'two'])) {
+		teamDisplay += iconize(two);
+	} else {
+		teamDisplay += noSprite;
+	}
+	if (Db.teams.has([user, 'three'])) {
+		teamDisplay += iconize(three);
+	} else {
+		teamDisplay += noSprite;
+	}
+	if (Db.teams.has([user, 'four'])) {
+		teamDisplay += iconize(four);
+	} else {
+		teamDisplay += noSprite;
+	}
+	if (Db.teams.has([user, 'five'])) {
+		teamDisplay += iconize(five);
+	} else {
+		teamDisplay += noSprite;
+	}
+	if (Db.teams.has([user, 'six'])) {
+		teamDisplay += iconize(six);
+	} else {
+		teamDisplay += noSprite;
+	}
+	teamDisplay += '</div></center>';
+	return teamDisplay;
+};
+
 exports.commands = {
 	vip: {
 		give: function (target, room, user) {
@@ -217,6 +268,105 @@ exports.commands = {
 			);
 		},
 	},
+		addmon: 'addteam',
+	addteam: function (target, room, user) {
+		if (!Db.hasteam.has(user.userid)) return this.errorReply('You dont have access to edit your team.');
+		if (!target) return this.parse('/teamhelp');
+		let parts = target.split(',');
+		let mon = parts[1].trim();
+		let slot = parts[0];
+		if (!parts[1]) return this.parse('/teamhelp');
+		let acceptable = ['one', 'two', 'three', 'four', 'five', 'six'];
+		if (!acceptable.includes(slot)) return this.parse('/teamhelp');
+		if (slot === 'one' || slot === 'two' || slot === 'three' || slot === 'four' || slot === 'five' || slot === 'six') { 
+			Db.teams.set([user, slot], mon);
+			this.sendReplyBox('You have added this pokemon to your team.');
+		} else {
+			return this.parse('/teamhelp');
+		}
+	},
+		giveteam: function (target, room, user) {
+		if (!this.can('broadcast')) return false;
+		if (!target) return this.errorReply('USAGE: /giveteam USER');
+		let person = target.toLowerCase().trim();
+			Db.hasteam.set(user, 1);
+		this.sendReply(person + ' has been given the ability to set their team.');
+		Users(user).popup('You have been given the ability to set your profile team.');
+	},
+
+	taketeam: function (target, room, user) {
+		if (!this.can('broadcast')) return false;
+		if (!target) return this.errorReply('USAGE: /taketeam USER');
+		if (!Db.hasteam.has(user)) return this.errorReply('This user does not have the ability to set their team.');
+		Db.hasteam.delete(user);
+		this.sendReply('this user has had their ability to change their team taken from them.');
+		Users(user).popup('You have been stripped of your ability to set your team.');
+	},
+
+	teamhelp: function (target, room, user) {
+		if (!this.runBroadcast()) return;
+		this.sendReplyBox('<center><b>Teams In Profiles - Coded By Execute, edited by DeathlyPlays :3</b></center><br><br>' +
+			'<b>/addmon (slot), (dex number) -</b >usage. The dex number must be the actual dex number of the pokemon you want.<br>' +
+			'FYI: Slot - we mean what slot you want the pokemon to be. valid entries for this are: one, two, three, four, five, six.<br>' +
+			'Chosing the right slot is crucial because if you chose a slot that already has a pokemon, it will overwrite that data and replace it. This can be used to replace / reorder what pokemon go where.<br>' +
+			'If the Pokemon is in the first 99 Pokemon, do 0(number), and for Megas do (dex number)-Mega.<br>' +
+			'For example: Mega Venusaur would be 003-Mega');
+	},
+	setpet: function (target, room, user) {
+		if (!target) return this.errorReply('USAGE: /setpet target, slot (one or two), pokemon name');
+		let targets = target.split(',');
+		for (let u = 0; u < targets.length; u++) targets[u] = targets[u].trim();
+		let targetUser = targets[0].toLowerCase().trim();
+		let slot = targets[1];
+		let pets = targets[2].toLowerCase();
+		let acceptable = ['one', 'two'];
+		if (!acceptable.includes(slot)) return this.errorReply('USAGE: /setpet target, slot (one or two), pokemon name');
+		if (!targets[2]) return this.errorReply('USAGE: /setpet target, slot (one or two), pokemon name');
+		if (slot === 'one' || slot === 'two') {
+			Db('pets').set([targetUser, slot], pets);
+			this.parse('/profile ' + targetUser);
+		}
+	},
+	crush: {
+		add: 'set',
+		set: function (target, room, user) { 
+			/* if (!room.battles) return this.errorReply("Please use this command outside of battle rooms"); */
+			/*if (!user.autoconfirmed) return this.errorReply("You must be autoconfirmed to use this command."); */
+			if (!target) return this.parse('/help', true); 
+			let crush = target; 
+			Db.crush.set(toId(user), crush); 
+			return this.sendReply("Your crush " + crush + " has been saved to the server."); 
+		}, 
+	remove: "delete", 
+	delete: function (target, room, user) { 
+		if (!target) { 
+		if(!Db.crush.has(toId(user))) return this.errorReply("Your crush isn't set");
+			Db.crush.remove(toId(userid)); 
+			return this.sendReply("Your crush has been removed"); 
+		} else {
+				if (!this.can('lock')) return false;
+				let userid = toId(target);
+				if (!Db.crush.has(userid)) return this.errorReply(userid + " hasn't set a crush.");
+				Db.crush.remove(userid);
+				return this.sendReply(userid + "'s crush has been deleted from the server.");
+			}
+	},
+	'': 'help',
+	help: function (target, room, user) {
+		if (room.battle) return this.errorReply("Please use this command outside of battle rooms.");
+		if (!user.autoconfirmed) return this.errorReply("You must be autoconfirmed to use this command.");
+		return this.sendReplyBox(
+				'<center><code>crush</code> Commands<br />' +
+				'All commands are nestled under the namespace <code>crush</code>.</center>' +
+				'<hr width="100%">' +
+				'<code>[add|set] [crush]</code>: Sets your crush.' +
+				'<br />' +
+				'<code>[remove|delete]</code>: Removes your crush. Global staff can include <code>[username]</code> to delete a user\'s crush.' +
+				'<br />' +
+				'<code>help</code>: Displays this help command.'
+			);
+		},
+	},
 	fc: 'friendcode',
 	friendcode: {
 		add: 'set',
@@ -277,7 +427,7 @@ exports.commands = {
 		let targetUser = Users.get(target);
 		let username = (targetUser ? targetUser.name : target);
 		let userid = (targetUser ? targetUser.userid : toId(target));
-		let avatar = (targetUser ? (isNaN(targetUser.avatar) ? "http://" + serverIp + ":" + Config.port + "/avatars/" + targetUser.avatar : "http://play.pokemonshowdown.com/sprites/trainers/" + targetUser.avatar + ".png") : (Config.customavatars[userid] ? "http://" + serverIp + ":" + Config.port + "/avatars/" + Config.customavatars[userid] : "http://play.pokemonshowdown.com/sprites/trainers/1.png"));
+		let avatar = (targetUser ? (isNaN(targetUser.avatar) ? "http://" + serverIp + "/avatars/" + targetUser.avatar : "http://play.pokemonshowdown.com/sprites/trainers/" + targetUser.avatar + ".png") : (Config.customavatars[userid] ? "http://" + serverIp + ":" + Config.port + "/avatars/" + Config.customavatars[userid] : "http://play.pokemonshowdown.com/sprites/trainers/1.png"));
 		if (targetUser && targetUser.avatar[0] === '#') avatar = 'http://play.pokemonshowdown.com/sprites/trainers/' + targetUser.avatar.substr(1) + '.png';
 		let userSymbol = (Users.usergroups[userid] ? Users.usergroups[userid].substr(0, 1) : "Regular User");
 		let userGroup = (Config.groups[userSymbol] ? 'Global ' + Config.groups[userSymbol].name : "Regular User");
@@ -316,9 +466,18 @@ exports.commands = {
 				profile += '&nbsp;<font color="#24678d"><b>Registered:</b></font> ' + regdate + '<br />';
 				profile += '&nbsp;<font color="#24678d"><b>' + global.currencyPlural + ':</b></font> ' + currency + '<br />';
 				profile += '&nbsp;<font color="#24678d"><b>Last Seen:</b></font> ' + getLastSeen(toId(username)) + '</font><br />';
+				if (Db.crush.has(toId(username))) {
+					profile += '&nbsp;<font color="#24678d"><b>Crush:</b></font> ' + Db.crush.get(toId(username)) +'<br />';
+					
+				} /*
 				if (Db.friendcodes.has(toId(username))) {
-					profile += '&nbsp;<font color="#24678d"><b>Friend Code:</b></font> ' + Db.friendcodes.get(toId(username));
-				}
+					profile += '&nbsp;<font color="#24678d"><b>Friend Code:</b></font> ' + Db.friendcodes.get(toId(username)) +'<br />';
+					
+				}*/ /*
+				profile += getteam(user)*/
+				
+				
+				
 				profile += '<br clear="all">';
 				self.sendReplyBox(profile);
 			});
