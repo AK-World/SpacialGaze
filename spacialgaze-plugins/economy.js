@@ -6,8 +6,8 @@ const fs = require('fs');
 // Ideally, this should be zero.
 const DEFAULT_AMOUNT = 0;
 
-global.currencyName = 'Stardust';
-global.currencyPlural = 'Stardust';
+global.currencyName = 'Activity Points';
+global.currencyPlural = 'Activity Points';
 
 let Economy = global.Economy = {
 	/**
@@ -115,9 +115,8 @@ function rankLadder(title, type, array, prop, group) {
 }
 
 exports.commands = {
-	'!wallet': true,
-	atm: 'wallet',
-	wallet: function (target, room, user) {
+	'!ap': true,
+	ap: function (target, room, user) {
 		if (!target) target = user.name;
 		if (!this.runBroadcast()) return;
 		let userid = toId(target);
@@ -130,10 +129,8 @@ exports.commands = {
 		});
 	},
 
-	gs: 'givecurrency', //You can change "gs" and "givestardust" to your currency name for an alias that applies to your currency Example: AwesomeBucks could be "ga" and "giveawesomebucks"
-	givestardust: 'givecurrency',
-	gc:'givecurrency',
-	givecurrency: function (target, room, user, connection, cmd) {
+	gap: 'giveap', //You can change "gs" and "givestardust" to your currency name for an alias that applies to your currency Example: AwesomeBucks could be "ga" and "giveawesomebucks"
+	giveap: function (target, room, user, connection, cmd) {
 		if (!this.can('forcewin')) return false;
 		if (!target) return this.sendReply("Usage: /" + cmd + " [user], [amount]");
 		let splitTarget = target.split(',');
@@ -165,10 +162,8 @@ exports.commands = {
 		});
 	},
 
-	ts: 'takecurrency', //You can change "ts" and "takestardust" to your currency name for an alias that applies to your currency Example: AwesomeBucks could be "ta" and "takeawesomebucks"
-	takestardust: 'takecurrency',
-	tc:'takecurrency',
-	takecurrency: function (target, room, user, connection, cmd) {
+	 //You can change "ts" and "takestardust" to your currency name for an alias that applies to your currency Example: AwesomeBucks could be "ta" and "takeawesomebucks"
+	takeap: function (target, room, user, connection, cmd) {
 		if (!this.can('forcewin')) return false;
 		if (!target) return this.sendReply("Usage: /" + cmd + " [user], [amount]");
 		let splitTarget = target.split(',');
@@ -201,10 +196,8 @@ exports.commands = {
 		});
 	},
 
-	confirmtransferstardust: 'transfercurrency', //You can change "transferstardust" and "confirmtransferstardust" to your currency name for an alias that applies to your currency Example: AwesomeBucks could be "transferawesomebucks" and "confirmtransferawesomebucks"
-	transferstardust: 'transfercurrency',
-	confirmtransfercurrency: 'transfercurrency',
-	transfercurrency: function (target, room, user, connection, cmd) {
+	tap: 'transferap', //You can change "transferstardust" and "confirmtransferstardust" to your currency name for an alias that applies to your currency Example: AwesomeBucks could be "transferawesomebucks" and "confirmtransferawesomebucks"
+	transferap: function (target, room, user, connection, cmd) {
 		if (!target) return this.sendReply("Usage: /" + cmd + " [user], [amount]");
 		let splitTarget = target.split(',');
 		for (let u in splitTarget) splitTarget[u] = splitTarget[u].trim();
@@ -220,7 +213,7 @@ exports.commands = {
 		if (amount < 1) return this.sendReply("/" + cmd + " - You can't transfer less than one " + currencyName + ".");
 		Economy.readMoney(user.userid, money => {
 			if (money < amount) return this.sendReply("/" + cmd + " - You can't transfer more " + currencyName + " than you have.");
-			if (cmd !== 'confirmtransfercurrency' && cmd !== 'confirmtransferstardust') {
+			if (cmd !== 'tap' && cmd !== 'transferap') {
 				return this.popupReply('|html|<center>' +
 					'<button class = "card-td button" name = "send" value = "/confirmtransfercurrency ' + toId(targetUser) + ', ' + amount + '"' +
 					'style = "outline: none; width: 200px; font-size: 11pt; padding: 10px; border-radius: 14px ; text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.4); box-shadow: 0px 0px 7px rgba(0, 0, 0, 0.4) inset; transition: all 0.2s;">' +
@@ -247,9 +240,9 @@ exports.commands = {
 		});
 	},
 
-	moneylog: function (target, room, user) {
+	aplog: function (target, room, user) {
 		if (!this.can('forcewin')) return false;
-		if (!target) return this.sendReply("Usage: /moneylog [number] to view the last x lines OR /moneylog [text] to search for text.");
+		if (!target) return this.sendReply("Usage: /aplog [number] to view the last x lines OR /moneylog [text] to search for text.");
 		let word = false;
 		if (isNaN(Number(target))) word = true;
 		let lines = fs.readFileSync('logs/transactions.log', 'utf8').split('\n').reverse();
@@ -274,9 +267,8 @@ exports.commands = {
 		user.popup("|wide|" + output);
 	},
 
-	'!richestuser': true,
-	richestusers: 'richestuser',
-	richestuser: function (target, room, user) {
+	'!apladder': true,
+	apladder: function (target, room, user) {
 		if (!target) target = 100;
 		target = Number(target);
 		if (isNaN(target)) target = 100;
@@ -284,26 +276,24 @@ exports.commands = {
 		let keys = Db.currency.keys().map(name => {
 			return {name: name, money: Db.currency.get(name)};
 		});
-		if (!keys.length) return this.sendReplyBox("Money ladder is empty.");
+		if (!keys.length) return this.sendReplyBox("AP ladder is empty.");
 		keys.sort(function (a, b) { return b.money - a.money; });
-		this.sendReplyBox(rankLadder('Richest Users', currencyPlural, keys.slice(0, target), 'money') + '</div>');
+		this.sendReplyBox(rankLadder('Active Users', currencyPlural, keys.slice(0, target), 'money') + '</div>');
 	},
 
-	resetstardust: 'resetmoney',
-	resetmoney: function (target, room, user) {
+	resetap: function (target, room, user) {
 		if (!this.can('roomowner')) return false;
-		if (!target) return this.parse('/help resetmoney');
+		if (!target) return this.parse('/help resetap');
 		target = toId(target);
 		Economy.writeMoney(target, 0);
 		this.sendReply(target + " now has 0 " + currencyName + ".");
 	},
-	resetmoneyhelp: ['/resetmoney [user] - Resets target user\'s currency to 0. Requires: &, ~'],
+	resetaphelp: ['/resetap [user] - Resets target user\'s ap to 0. Requires: &, ~'],
 
 	customsymbol: function (target, room, user) {
 		let bannedSymbols = ['!', '|', '‽', '\u2030', '\u534D', '\u5350', '\u223C'];
 		for (let u in Config.groups) if (Config.groups[u].symbol) bannedSymbols.push(Config.groups[u].symbol);
-		if (!user.canCustomSymbol && !user.can('vip')) return this.sendReply('You need to buy this item from the shop to use.');
-		if (!target || target.length > 1) return this.sendReply('/customsymbol [symbol] - changes your symbol (usergroup) to the specified symbol. The symbol can only be one character');
+	if (!target || target.length > 1) return this.sendReply('/customsymbol [symbol] - changes your symbol (usergroup) to the specified symbol. The symbol can only be one character');
 		if (target.match(/([a-zA-Z ^0-9])/g) || bannedSymbols.indexOf(target) >= 0) {
 			return this.sendReply('This symbol is banned.');
 		}
