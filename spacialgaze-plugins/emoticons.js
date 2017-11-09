@@ -5,7 +5,37 @@ This plugin allows you to use emoticons in both chat rooms (as long as they are 
 'use strict';
 
 const fs = require('fs');
-let emoticons = {'feelsbd': 'http://i.imgur.com/TZvJ1lI.png'};
+let emoticons = {'facepalm': 'http://i.imgur.com/ylrqFwJ.png',
+		 'feelsbd': 'http://i.imgur.com/TZvJ1lI.png',
+		 'obama': 'https://cdn.rawgit.com/CreaturePhil/dem-feels/gh-pages/emotes/OObama.png',
+		 'feelsblad': 'https://raw.githubusercontent.com/CreaturePhil/dem-feels/gh-pages/emotes/feelsbald.png',
+		 'feelsbm': 'http://i.imgur.com/xwfJb2z.png',
+		 'feelscool': 'https://cdn.rawgit.com/CreaturePhil/dem-feels/gh-pages/emotes/feelsco.png',
+		 'feelscop': 'http://i.imgur.com/eNaFHvR.png',
+		 'feelscrazy': 'https://raw.githubusercontent.com/CreaturePhil/dem-feels/gh-pages/emotes/feelscr.png',
+		 'feelscri': 'http://i.imgur.com/QAuUW7u.jpg',
+		 'feelsdra': 'https://i.imgur.com/ZIcl9Zy_d.jpg',
+		 'feelsgd': 'https://i.imgur.com/Jf0n4BL_d.jpg',
+		 'feelsgm': 'https://cdn.rawgit.com/CreaturePhil/dem-feels/gh-pages/emotes/feelsgm.png',
+		 'feelsgn': 'http://i.imgur.com/juJQh0J.png',
+		 'feelshp': 'http://i.imgur.com/1W19BDG.png',
+		 'feelsmd': 'http://i.imgur.com/DJHMdSw.png',
+		 'feelsnerd': 'https://raw.githubusercontent.com/CreaturePhil/dem-feels/gh-pages/emotes/feelsnerd.png',
+		 'feelsnv': 'https://i.imgur.com/XF6kIdJ_d.jpg',
+		 'feelsok': 'http://i.imgur.com/gu3Osve.png',
+		 'feelsrg': 'http://i.imgur.com/DsRQCsI.png',
+		 'feelsrs': 'http://i.imgur.com/qGEot0R.png',
+		 'feelssc': 'http://i.imgur.com/cm6oTZ1.png',
+		 'feelsweird': 'https://cdn.betterttv.net/emote/5603731ce5fc5eff1de93229/2x',
+		 'hmmface': 'https://i.imgur.com/Z5lOwfZ_d.jpg',
+		 'nigga': 'https://cdn.rawgit.com/CreaturePhil/dem-feels/gh-pages/emotes/niglol.png',
+		 'xaa': 'http://i.imgur.com/V728AvL.png',
+		 'wtfman': 'https://i.imgur.com/kwR8Re9_d.jpg',
+		 'yayface': 'https://i.imgur.com/anY1jf8_d.jpg',
+		 'trollface': 'http://cdn.overclock.net/a/a0/50x50px-ZC-a0e3f9a7_troll-troll-face.png',
+		 'fuckya': 'http://i.imgur.com/ampqCZi.gif',
+		 'feelstired': 'http://i.imgur.com/EgYViOs.jpg',
+		 'feelssd': 'https://cdn.betterttv.net/emote/5613b7ca141069f91f48acca/2x'};
 let emoteRegex = new RegExp('feelsbd', 'g');
 SG.ignoreEmotes = {};
 try {
