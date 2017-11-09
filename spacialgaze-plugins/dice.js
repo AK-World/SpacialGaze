@@ -34,7 +34,7 @@ class Dice {
 			delete this.room.dice;
 		}, INACTIVE_END_TIME);
 
-		let buck = (this.bet === 1 ? 'buck' : 'bucks');
+		let buck = (this.bet === 1 ? 'activity point' : 'activity points');
 		this.startMessage = '<div class="infobox"><b style="font-size: 14pt; color: #24678d"><center><span style="color: ' + SG.hashColor(starter) + '">' + Chat.escapeHTML(starter) + '</span> has started a game of dice for <span style = "color: green">' + amount + '</span> ' + buck + '!</center></b><br>' +
 			'<center><img style="margin-right: 30px;" src = "http://i.imgur.com/eywnpqX.png" width="80" height="80">' +
 			'<img style="transform:rotateY(180deg); margin-left: 30px;" src="http://i.imgur.com/eywnpqX.png" width="80" height="80"><br>' +
@@ -45,7 +45,7 @@ class Dice {
 	join(user, self) {
 		if (this.players.length >= 2) return self.errorReply("Two users have already joined this game of dice.");
 		Economy.readMoney(user.userid, money => {
-			if (money < this.bet) return self.sendReply('You don\'t have enough money for this game of dice.');
+			if (money < this.bet) return self.sendReply('You don\'t have enough activity points for this game of dice.');
 			if (this.players.includes(user)) return self.sendReply('You have already joined this game of dice.');
 			if (this.players.length && this.players[0].latestIp === user.latestIp) return self.errorReply("You have already joined this game of dice under the alt '" + this.players[0].name + "'.");
 			if (this.players.length >= 2) return self.errorReply("Two users have already joined this game of dice.");
@@ -70,8 +70,8 @@ class Dice {
 				if (money1 < this.bet || money2 < this.bet) {
 					let user = (money1 < this.bet ? p1 : p2);
 					let other = (user === p1 ? p2 : p1);
-					user.sendTo(this.room, 'You have been removed from this game of dice, as you do not have enough money.');
-					other.sendTo(this.room, user.name + ' has been removed from this game of dice, as they do not have enough money. Wait for another user to join.');
+					user.sendTo(this.room, 'You have been removed from this game of dice, as you do not have enough activity points.');
+					other.sendTo(this.room, user.name + ' has been removed from this game of dice, as they do not have enough activity points. Wait for another user to join.');
 					this.players.splice(this.players.indexOf(user), 1);
 					this.room.add('|uhtmlchange|' + this.room.diceCount + '|' + this.startMessage + '<center>' + this.players.map(user => SG.nameColor(user.name)) + ' has joined the game!</center>').update();
 					return;
@@ -89,7 +89,7 @@ class Dice {
 
 				let taxedAmt = Math.round(this.bet * TAX);
 				setTimeout(() => {
-					let buck = (this.bet === 1 ? 'buck' : 'bucks');
+					let buck = (this.bet === 1 ? 'activity point' : 'activity points');
 					this.room.add('|uhtmlchange|' + this.room.diceCount + '|<div class="infobox"><center>' + players + ' have joined the game!<br /><br />' +
 						'The game has been started! Rolling the dice...<br />' +
 						'<img src = "' + diceImg(roll1) + '" align = "left" title = "' + Chat.escapeHTML(p1.name) + '\'s roll"><img src = "' + diceImg(roll2) + '" align = "right" title = "' + p2.name + '\'s roll"><br />' +
