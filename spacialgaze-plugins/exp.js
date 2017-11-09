@@ -220,7 +220,12 @@ exports.commands = {
 		this.sendReply(uid + " has received " + amount + ((amount === 1) ? " exp." : " exp."));
 	},
 	giveexphelp: ["/giveexp [user], [amount] - Give a user a certain amount of exp."],
-
+        
+	'!exprewards': true, 
+	exprewards: function(target, room, user) { 
+		this.sendReplyBox("<b>EXP Rewards</b><br><hr><br><b>Level 3:</b> Free custom avatar.<br><b>Level 5:</b> Free custom title.<br><b>Level 7:</b> Free userlist icon.<br><b>Level 10:</b> Free custom emote.<br><b>Level 12:</b> Free custom color.<br><b>Level 15: </b>50 activity points.<br><b>Level 20:</b> Free chatroom.");
+	},
+	
 	resetexp: 'resetxp',
 	confirmresetexp: 'resetxp',
 	resetxp: function (target, room, user, conection, cmd) {
