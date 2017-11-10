@@ -36,7 +36,7 @@ let emoticons = {'facepalm': 'http://i.imgur.com/ylrqFwJ.png',
 		 'fuckya': 'http://i.imgur.com/ampqCZi.gif',
 		 'feelstired': 'http://i.imgur.com/EgYViOs.jpg',
 		 'feelssd': 'https://cdn.betterttv.net/emote/5613b7ca141069f91f48acca/2x'};
-let emoteRegex = new RegExp('feelsbd', 'g');
+let emoteRegex = new RegExp('feelsbd', 'facepalm', 'obama', 'feelsblad', 'g');
 SG.ignoreEmotes = {};
 try {
 	SG.ignoreEmotes = JSON.parse(fs.readFileSync('config/ignoreemotes.json', 'utf8'));
